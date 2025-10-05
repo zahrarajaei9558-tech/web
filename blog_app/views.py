@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 
 def welcome_view(request):
     html = '''
@@ -45,3 +45,31 @@ def sum_view(request):
     </html>
     '''
     return HttpResponse(html)
+
+def multiply_view(request, a, b):
+    try:
+        num1 = int(a)
+        num2 = int(b)
+        result = num1 * num2
+        html = f'''
+        <html>
+        <head>
+            <title>عملیات ضرب</title>
+            <style>
+                body {{ background: #f7fafc; font-family: Tahoma, Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; }}
+                .mul-box {{ background: #fff; border-radius: 16px; box-shadow: 0 4px 24px #0001; padding: 40px 60px; text-align: center; }}
+                .mul-title {{ font-size: 2rem; color: #d32f2f; margin-bottom: 12px; }}
+                .mul-result {{ font-size: 1.3rem; color: #333; }}
+            </style>
+        </head>
+        <body>
+            <div class="mul-box">
+                <div class="mul-title">ضرب {num1} × {num2}</div>
+                <div class="mul-result">نتیجه: {result}</div>
+            </div>
+        </body>
+        </html>
+        '''
+        return HttpResponse(html)
+    except Exception:
+        raise Http404("اعداد معتبر وارد کنید.")
