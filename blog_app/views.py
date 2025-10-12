@@ -1,5 +1,42 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
+import random
+
+def bmi_view(request, height, weight):
+    try:
+        # تبدیل قد از سانتی‌متر به متر
+        height_m = height / 100
+        # محاسبه BMI
+        bmi = weight / (height_m * height_m)
+        
+        # تعیین وضعیت بر اساس BMI
+        if bmi < 18.5:
+            status = "کمبود وزن"
+        elif bmi < 25:
+            status = "وزن نرمال"
+        elif bmi < 30:
+            status = "اضافه وزن"
+        else:
+            status = "چاقی"
+            
+        message = f"قد شما: {height} سانتی‌متر\nوزن شما: {weight} کیلوگرم\nشاخص BMI: {bmi:.1f}\nوضعیت: {status}"
+        return HttpResponse(message)
+    except Exception:
+        raise Http404("لطفاً مقادیر معتبر وارد کنید.")
+
+def random_game_view(request, user_number):
+    try:
+        random_number = random.randint(1, 5)  
+        is_winner = user_number == random_number
+        
+        if is_winner:
+            message = f"تبریک! برنده شدید! 🎉\nعدد شما: {user_number}\nعدد تصادفی: {random_number}"
+        else:
+            message = f"متاسفانه باختید! 😔\nعدد شما: {user_number}\nعدد تصادفی: {random_number}"
+            
+        return HttpResponse(message)
+    except Exception:
+        raise Http404("لطفاً یک عدد معتبر وارد کنید.")
 
 def welcome_view(request):
     html = '''
